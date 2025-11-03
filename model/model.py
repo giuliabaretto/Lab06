@@ -35,8 +35,25 @@ class Autonoleggio:
             Funzione che legge tutte le automobili nel database
             :return: una lista con tutte le automobili presenti oppure None
         """
+        automobili = []
+        connection = get_connection()
+        if connection is None:
+            print("Connection failed")
+            return None
+        else:
+            cursor = connection.cursor(dictionary=True) #come visto a lezione 3/11
+            query = """SELECT *
+                        FROM automobile"""
+            cursor.execute(query)
+            for row in cursor:
+                # creo oggetto auto
+                auto = Automobile(row["codice"], row["marca"], row["modello"], row["anno"], row["posti"], row["disponibile"])
+                automobili.append(auto)
 
-        # TODO
+            cursor.close()
+            connection.close()
+            return automobili
+
 
     def cerca_automobili_per_modello(self, modello) -> list[Automobile] | None:
         """
@@ -44,4 +61,22 @@ class Autonoleggio:
             :param modello: il modello dell'automobile
             :return: una lista con tutte le automobili di marca e modello indicato oppure None
         """
-        # TODO
+        automobili_cercate = []
+        connection = get_connection()
+        if connection is None:
+            print("Connection failed")
+            return None
+        else:
+            cursor = connection.cursor(dictionary=True)
+            query = """ SELECT *
+                        FROM automobile
+                        WHERE modello = %s"""
+            cursor.execute(query, (modello,))
+            for row in cursor:
+                auto = Automobile(row["codice"], row["marca"], row["modello"], row["anno"], row["posti"], row["disponibile"])
+                automobili_cercate.append(auto)
+
+            cursor.close()
+            connection.close()
+            return automobili_cercate
+

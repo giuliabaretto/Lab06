@@ -62,8 +62,11 @@ class View:
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
         pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=self.controller.conferma_responsabile)
 
+
         # Altri Pulsanti da implementare (es. "Mostra" e "Cerca")
         pulsante_mostra_automobili = ft.ElevatedButton("Mostra", on_click = self.controller.mostra_automobili) #questo on_click -> devo implementare def mostra_automobili nel controller
+        pulsante_cerca_automobile = ft.ElevatedButton("Cerca", on_click = self.controller.cerca_per_modello)
+
 
         # --- LAYOUT ---
         self.page.add(
@@ -81,20 +84,45 @@ class View:
                    alignment=ft.MainAxisAlignment.CENTER),
             ft.Divider(),
 
-            # Sezione 3
+            # Sezione 3 - LISTA DELLE AUTOMOBILI
             # Un controllo Text con testo “Automobili”
-            ft.Text("Automobili", size=20),
-            ft.Row(spacing=200,
-                   controls = pass [pulsante_mostra_automobili] # Un controllo ElevatedButton “Mostra” per mostrare tutte le automobili presenti nel database (riga 66)
-                   alignment = ft.MainAxisAlignment.START),
-            # qui avrò list view qualcosa
+                 #metto tutto nella stessa riga e tolgo spacing perche "Automobili" e "Mostra" devono stare vicini
+            ft.Row(controls = [ft.Text("Automobili", size=20), pulsante_mostra_automobili], # Un controllo ElevatedButton “Mostra” per mostrare tutte le automobili presenti nel database (riga 66)
+                   alignment = ft.MainAxisAlignment.START), #allineo a sinistra
+            # Un contenitore ListView da popolare con le auto che vengono lette dal database.
+            self.lista_auto,
             ft.Divider(),
 
-            # Sezione 4
-            # TODO
+            # Sezione 4 - RICERCA AUTOMOBILE PER MODELLO
+            # Un controllo Text con testo “Cerca Automobile”.
+            ft.Text("Cerca Automobile", size=20),
+            ft.Row(spacing=200,
+                   controls = [self.input_modello_auto, pulsante_cerca_automobile], # Un controllo TextField per inserire il modello dell’automobile da cercare. E Un controllo ElevatedButton “Cerca” per avviare la ricerca.
+                   alignment = ft.MainAxisAlignment.START),
+            # Un contenitore ListView da popolare con l’elenco delle automobili trovate nel database
+                # dato il modello inserito (nel database possono esserci più automobili dello stesso modello).
+            self.lista_auto_ricerca
         )
 
     def cambia_tema(self, e):
         self.page.theme_mode = ft.ThemeMode.DARK if self.toggle_cambia_tema.value else ft.ThemeMode.LIGHT
         self.toggle_cambia_tema.label = "Tema scuro" if self.toggle_cambia_tema.value else "Tema chiaro"
+        self.page.update()
+
+
+    # DEVO DEFINIRE ULTERIORI DUE METODI
+
+    # aggiungo def mostra_lista_automobili()
+    # dove la View riceve i dati dal Controller e li trasforma in elementi grafici
+    def mostra_lista_automobili(self, automobili):
+        self.lista_auto.controls.clear() #svuota la lista grafica
+        for automobile in automobili: #aggiungo una riga per ogni automobile
+            self.lista_auto.controls.append(ft.Text(f"{automobile.codice} | {automobile.marca} {automobile.modello} ({automobile.anno}) | [{automobile.posti} posti] | {automobile.disponibile}"))
+        self.page.update() # aggiorno la pagina
+
+    # e aggiungo def mostra_lista_automobili_per_modello (stessa cosa appena fatta, ma per la sezione 4, prima era per la sezione 3)
+    def mostra_lista_automobili_per_modello(self, automobili):
+        self.lista_auto_ricerca.controls.clear()
+        for automobile in automobili:
+            self.lista_auto_ricerca.controls.append(ft.Text(f"{automobile.codice} | {automobile.marca} {automobile.modello} ({automobile.anno}) | [{automobile.posti} posti] | {automobile.disponibile}"))
         self.page.update()
