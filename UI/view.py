@@ -63,7 +63,7 @@ class View:
         pulsante_conferma_responsabile = ft.ElevatedButton("Conferma", on_click=self.controller.conferma_responsabile)
 
         # Altri Pulsanti da implementare (es. "Mostra" e "Cerca")
-        # TODO
+        pulsante_mostra_automobili = ft.ElevatedButton("Mostra", on_click = self.controller.mostra_automobili) #questo on_click -> devo implementare def mostra_automobili nel controller
 
         # --- LAYOUT ---
         self.page.add(
@@ -82,7 +82,13 @@ class View:
             ft.Divider(),
 
             # Sezione 3
-            # TODO
+            # Un controllo Text con testo “Automobili”
+            ft.Text("Automobili", size=20),
+            ft.Row(spacing=200,
+                   controls = pass [pulsante_mostra_automobili] # Un controllo ElevatedButton “Mostra” per mostrare tutte le automobili presenti nel database (riga 66)
+                   alignment = ft.MainAxisAlignment.START),
+            # qui avrò list view qualcosa
+            ft.Divider(),
 
             # Sezione 4
             # TODO

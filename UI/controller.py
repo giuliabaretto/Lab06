@@ -29,3 +29,7 @@ class Controller:
 
     # Altre Funzioni Event Handler
     # TODO
+    # creo funzione mostra automobili che trovo nel model -> get_auto
+    def mostra_automobili(self, e):
+        self. # lista oggetti automobili da trasformare in elementi di interfaccia -> lista automobili diventa list view di automobile
+        self._view.update()
